@@ -7,13 +7,13 @@
 # This software is distributed under the terms of the GNU General Public
 # License ("GPL") version 3, as published by the Free Software Foundation.
 #
-    
+
 # Priority: 2600
 # Description: Spoof firmware build / version
 
 # Option --spoof: Select firmware version to spoof
 # Type --spoof: combobox { {3.15 38031 001:CEX-ww} {3.41 45039 001:CEX-ww} {3.55 47516 001:CEX-ww} {3.56 48246 001:CEX-ww} {3.60 48686 001:CEX-ww} }
-    
+
 namespace eval ::spoof_version {
 
     array set ::spoof_version::options {
@@ -66,7 +66,7 @@ namespace eval ::spoof_version {
       debug "replace: $replace"
       catch_die {::patch_elf $elf $search 0 $replace} "Unable to patch self [file tail $elf] with [::hexify $replace]"
 
-#      debug "Patching 0x31a7c0" 
+#      debug "Patching 0x31a7c0"
 #      set search "\x48\x00\x00\x38\xa0\x7f\x00\x04\x39\x60\x00\x01"
 #      set replace "\x38\x60\x00\x82"
 #      catch_die {::patch_elf $elf $search 4 $replace} "Unable to patch self [file tail $elf]"

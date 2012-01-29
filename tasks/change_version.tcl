@@ -7,7 +7,7 @@
 # This software is distributed under the terms of the GNU General Public
 # License ("GPL") version 3, as published by the Free Software Foundation.
 #
-    
+
 # Priority: 100
 # Description: Change PUP build / version
 
@@ -20,7 +20,7 @@
 # Type --version-string: string
 # Type --version-prefix: string
 # Type --version-suffix: string
-    
+
 namespace eval ::change_version {
 
     array set ::change_version::options {

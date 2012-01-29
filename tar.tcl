@@ -6,7 +6,7 @@
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
-# 
+#
 # RCS: @(#) $Id: tar.tcl,v 1.11 2007/02/09 06:03:56 afaupell Exp $
 
 package provide tar 0.4
@@ -16,7 +16,7 @@ namespace eval ::tar {}
 proc ::tar::parseOpts {acc opts} {
     array set flags $acc
     foreach {x y} $acc {upvar $x $x}
-    
+
     set len [llength $opts]
     set i 0
     while {$i < $len} {
@@ -45,7 +45,7 @@ proc ::tar::readHeader {data} {
     binary scan $data a100a8a8a8a12a12a8a1a100a6a2a32a32a8a8a155 \
                       name mode uid gid size mtime cksum type \
                       linkname magic version uname gname devmajor devminor prefix
-                               
+
     foreach x {name mode type linkname magic uname gname prefix mode uid gid size mtime cksum version devmajor devminor} {
         set $x [string trim [set $x] "\x00"]
     }
@@ -175,18 +175,18 @@ proc ::tar::untar {tar args} {
 
 proc ::tar::createHeader {name followlinks} {
     foreach x {linkname prefix devmajor devminor} {set $x ""}
-    
+
     if {$followlinks} {
         file stat $name stat
     } else {
         file lstat $name stat
     }
-    
+
     set type [string map {file 0 directory 5 characterSpecial 3 blockSpecial 4 fifo 6 link 2 socket A} $stat(type)]
     set gid "0001274"
     set uid "0001752"
     set mtime [format %.11o $stat(mtime)]
-    
+
     set uname "pup_tool"
     set gname "psnes"
     if {$::tcl_platform(platform) == "unix"} {
@@ -196,12 +196,12 @@ proc ::tar::createHeader {name followlinks} {
         set mode 0000644
         if {$stat(type) == "directory"} {set mode 0000755}
     }
-    
+
     set size 0
     if {$stat(type) == "file"} {
         set size [format %.11o $stat(size)]
     }
-    
+
     set name [string trimleft $name /]
     if {[string length $name] > 255} {
         return -code error "path name over 255 chars"
@@ -249,7 +249,7 @@ proc ::tar::writefile {in out followlinks} {
 proc ::tar::create {tar files args} {
     set dereference 0
     parseOpts {dereference 0} $args
-    
+
     set fh [::open $tar w+]
     fconfigure $fh -encoding binary -translation lf -eofchar {}
     foreach x [recurseDirs $files $dereference] {
@@ -264,7 +264,7 @@ proc ::tar::create {tar files args} {
 proc ::tar::add {tar files args} {
     set dereference 0
     parseOpts {dereference 0} $args
-    
+
     set fh [::open $tar r+]
     fconfigure $fh -encoding binary -translation lf -eofchar {}
     seek $fh -1024 end

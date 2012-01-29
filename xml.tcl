@@ -23,18 +23,18 @@ namespace eval ::xml {
 	regsub {>[^>]*?$} $xml {>} xml
 	if { $xml == "" } { return "" }
 	# Remove xml file header and comments
-	# Here the ".*?" in the regexp means a non greedy matching, 
+	# Here the ".*?" in the regexp means a non greedy matching,
 	# which means match as little characters as possible.. the reason, here's an example :
 	# <!-- comment --> <tag/> <!-- comment2 --> <tag2/>
-	# the regsub {<!--.*-->} would remove from the first <!-- to the last --> 
-	# which means we end up with <tag2/> and we loose <tag/>.. 
+	# the regsub {<!--.*-->} would remove from the first <!-- to the last -->
+	# which means we end up with <tag2/> and we loose <tag/>..
 	# if it's greedy, it will match all possible chars, with non-greedy,
-	# it will match only the smallest number: only the comment... 
+	# it will match only the smallest number: only the comment...
 	regsub -all {<\?xml.*?\?>} $xml "" xml
 	regsub -all {<!--.*?-->} $xml "" xml
 	# Avoid unmatched braces in list, in case we have a left or right accolade in the xml data
 	set xml [string map {"\{" "&right_accolade;" "\}" "&left_accolade;" "\\" "&escape_char;"}  $xml]
-	
+
 	regsub -all {>\s*<} [string trim $xml " \r\n\t<>"] "\} \{" xml
 	set xml [string map {> "\} \{#text \{" < "\}\} \{" }  $xml]
 
@@ -70,7 +70,7 @@ namespace eval ::xml {
 	    if {[llength $rest]%2} {error "att's not paired: $rest"}
 	}
 	if [llength $stack] {error "unresolved: $stack"}
-	
+
 	# Unescape chars and accolades
 	string map {"\} \}" "\}\}" "&right_accolade;" "\\\{" "&left_accolade;" "\\\}" "&escape_char;" "\\\\"} [xmldecode [lindex $res 0] 1]
     }
@@ -125,7 +125,7 @@ namespace eval ::xml {
 	}
 	return $res
     }
-    
+
     proc xmlencode {string} {
 	    return [string map {
 		    "<" "&lt;"
@@ -181,7 +181,7 @@ namespace eval ::xml {
 	puts $fd $xml
 	close $fd
     }
-    
+
     proc GetNodeIndices {list find {no 0} {stack ""}} {
 	variable xmlTag_occurences
 
@@ -206,7 +206,7 @@ namespace eval ::xml {
 		    [string first $current_stack ":$find"] == -1 } {
 		    #status_log "$find not in $current_stack" red
 		    continue
-		} else { 
+		} else {
 		    set index 2
 		    set subindex 0
 		    #status_log "$find is in a subkey of $current_stack\n" red
@@ -219,7 +219,7 @@ namespace eval ::xml {
 			incr subindex
 		    }
 		}
-	    }	
+	    }
 	}
 
 	return ""
@@ -253,8 +253,8 @@ namespace eval ::xml {
 	}
 	return ""
     }
-    
-    proc GetAttribute { list find attribute_name {no 0}} {	
+
+    proc GetAttribute { list find attribute_name {no 0}} {
 	set node [GetNode $list $find $no]
 	if {$node != ""} {
 	    foreach { tag attributes children} $node break
@@ -262,11 +262,11 @@ namespace eval ::xml {
 	    if { [info exists attributes_arr($attribute_name)] } {
 		return [string map {"\\\\" "\\" "\\\{" "\{" "\\\}" "\}" } [set attributes_arr($attribute_name)]]
 	    }
-	} 
+	}
 	return ""
     }
-    
-    proc ListChildren {list find {no 0}} {	
+
+    proc ListChildren {list find {no 0}} {
 	set node [GetNode $list $find $no]
 	if {$node != ""} {
 	    foreach { tag attributes children} $node break
@@ -281,7 +281,7 @@ namespace eval ::xml {
 	return ""
     }
 
-    proc GetAttributes { list find {no 0}} {	
+    proc GetAttributes { list find {no 0}} {
 	set node [GetNode $list $find $no]
 	if {$node != ""} {
 	    foreach { tag attributes children} $node break
@@ -289,8 +289,8 @@ namespace eval ::xml {
 	}
 	return ""
     }
-    
-    proc ListAttributes { list find {no 0}} {	
+
+    proc ListAttributes { list find {no 0}} {
 	array set attributes [GetAttributes $list $find $no]
 	return [array names attributes]
     }
@@ -301,11 +301,11 @@ namespace eval ::xml {
 
     proc InsertNode {list indices node} {
 	return [__modifyNode $list $indices $node "insert"]
-    } 
+    }
 
     proc RemoveNode {list indices} {
 	return [__modifyNode $list $indices {} "remove"]
-    } 
+    }
 
     proc GetNodeIndicesByAttribute {list find attribute value {no 0}} {
 	    regsub {:$} $find {} find

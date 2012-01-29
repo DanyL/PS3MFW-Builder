@@ -12,7 +12,7 @@
 # Description: Add "TV" category to the XMB
 
 # Option --tv-cat: Show TV category in xmb no matter if your country support it.
-    
+
 # Type --tv-cat: boolean
 
 
@@ -22,14 +22,14 @@ namespace eval ::tv_category {
         --tv-cat true
     }
 
-    proc main {} {		
+    proc main {} {
 		if {$::tv_category::options(--tv-cat)} {
 		set CATEGORY_XML [file join dev_flash vsh resource explore xmb category_tv.xml]
 		set XMB_PLUGIN [file join dev_flash vsh module xmb_plugin.sprx]
 		modify_devflash_file $XMB_PLUGIN ::tv_category::patch_self
         }
 	}
-	
+
     proc patch_self {self} {
         log "Patching [file tail $self]"
         ::modify_self_file $self ::tv_category::patch_elf

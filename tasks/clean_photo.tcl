@@ -7,11 +7,11 @@
 # This software is distributed under the terms of the GNU General Public
 # License ("GPL") version 3, as published by the Free Software Foundation.
 #
-    
+
 # Priority: 1200
 # Category: Photo
 # Description: Clean unwanted icons from the XMB Photo Category
-    
+
 # Option --clean-photo-dlna-scan: Remove "Search for Media Servers" icon from the XMB Photo Category
 # Option --clean-photo-dlna-device: Remove "Network Media Servers" icon from the XMB Photo Category
 # Option --clean-photo-hakoniwa: Remove "Photo Gallery" icon from the XMB Photo Category
@@ -33,15 +33,15 @@ namespace eval ::clean_photo {
         --clean-photo-playlists false
         --clean-photo-screenshot true
     }
-    
+
     proc main {} {
         set CATEGORY_PHOTO_XML [file join dev_flash vsh resource explore xmb category_photo.xml]
         ::modify_devflash_file ${CATEGORY_PHOTO_XML} ::clean_photo::callback
     }
-    
+
     proc callback { file } {
         log "Modifying XML file [file tail ${file}]"
-    
+
         set xml [::xml::LoadFile $file]
         if {$::clean_photo::options(--clean-photo-dlna-scan)} {
             set xml [::remove_node_from_xmb_xml $xml "seg_dlna_scan" "Search for Media Servers"]
@@ -58,7 +58,7 @@ namespace eval ::clean_photo {
         if {$::clean_photo::options(--clean-photo-screenshot)} {
             set xml [::remove_node_from_xmb_xml $xml "seg_screenshot" "Screenshot"]
         }
-    
+
         ::xml::SaveToFile $xml $file
     }
 }

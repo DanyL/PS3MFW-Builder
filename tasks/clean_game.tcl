@@ -7,11 +7,11 @@
 # This software is distributed under the terms of the GNU General Public
 # License ("GPL") version 3, as published by the Free Software Foundation.
 #
-    
+
 # Priority: 1600
 # Category: Game
 # Description: Clean unwanted icons from the XMB Game Category
-    
+
 # Option --clean-game-gamedata: Remove "Game Data" icon from the XMB Game Category
 # Option --clean-game-mcutility: Remove "Memory Card Utility (PS/PS2)" icon from the XMB Game Category
 # Option --clean-game-minis-manual: Remove "Minis Manual" icon from the XMB Game Category
@@ -39,15 +39,15 @@ namespace eval ::clean_game {
         --clean-game-sdpsp false
         --clean-game-trophy false
     }
-    
+
     proc main {} {
         set CATEGORY_GAME_XML [file join dev_flash vsh resource explore xmb category_game.xml]
         ::modify_devflash_file ${CATEGORY_GAME_XML} ::clean_game::callback
     }
-    
+
     proc callback { file } {
         log "Modifying XML file [file tail ${file}]"
-    
+
         set xml [::xml::LoadFile $file]
         if {$::clean_game::options(--clean-game-gamedata)} {
             set xml [::remove_node_from_xmb_xml $xml "seg_gamedata" "Game Data"]
@@ -70,7 +70,7 @@ namespace eval ::clean_game {
         if {$::clean_game::options(--clean-game-trophy)} {
             set xml [::remove_node_from_xmb_xml $xml "seg_trophy" "Trophy Collection"]
         }
-    
+
         ::xml::SaveToFile $xml $file
     }
 }

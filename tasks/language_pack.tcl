@@ -27,7 +27,7 @@ namespace eval ::language_pack {
         --language-replace ""
         --language-font true
     }
-	
+
     proc main {} {
         variable options
         set fontPrefix "SCE-PS3-"
@@ -45,13 +45,13 @@ namespace eval ::language_pack {
                   ::modify_devflash_file ${devflashFontFile} ::language_pack::callback_font ${langpackFontFile}
                 }
             }
-		}	
+		}
 
         set rcoFiles {{ap_plugin} {audioplayer_plugin} {audioplayer_plugin_dummy} {audioplayer_plugin_mini} {audioplayer_plugin_util} {auth_plugin} {autodownload_plugin} {avc_game_plugin} {avc_plugin} {avc2_game_plugin} {avc2_game_video_plugin} {avc2_text_plugin} {bdp_disccheck_plugin} {bdp_plugin} {bdp_storage_plugin} {category_setting_plugin} {checker_plugin} {custom_render_plugin} {data_copy_plugin} {deviceconf_plugin} {dlna_plugin} {download_plugin} {edy_plugin} {eula_cddb_plugin} {eula_hcopy_plugin} {eula_net_plugin} {explore_category_friend} {explore_category_game} {explore_category_music} {explore_category_network} {explore_category_photo} {explore_category_psn} {explore_category_sysconf} {explore_category_tv} {explore_category_user} {explore_category_video} {explore_plugin_ft} {explore_plugin_full} {explore_plugin_game} {explore_plugin_np} {filecopy_plugin} {friendim_plugin} {friendim_plugin_game} {friendml_plugin} {friendml_plugin_game} {friendtrophy_plugin} {friendtrophy_plugin_game} {game_ext_plugin} {game_indicator_plugin} {game_plugin} {gamedata_plugin} {gamelib_plugin} {gameupdate_plugin} {hknw_plugin} {idle_plugin} {impose_plugin} {kensaku_plugin} {msgdialog_plugin} {musicbrowser_plugin} {nas_plugin} {netconf_plugin} {newstore_effect} {newstore_plugin} {np_eula_plugin} {np_matching_plugin} {np_multisignin_plugin} {np_trophy_ingame} {np_trophy_plugin} {npsignin_plugin} {osk_plugin} {oskfullkeypanel_plugin} {oskpanel_plugin} {pesm_plugin} {photo_network_sharing_plugin} {photolist_plugin} {photoupload_plugin} {photoviewer_plugin} {playlist_plugin} {poweroff_plugin} {premo_plugin} {print_plugin} {profile_plugin} {profile_plugin_mini} {ps3_savedata_plugin} {rec_plugin} {regcam_plugin} {sacd_plugin} {scenefolder_plugin} {screenshot_plugin} {search_service} {software_update_plugin} {soundvisualizer_plugin} {strviewer_plugin} {subdisplay_plugin} {sv_pseudoaudioplayer_plugin} {sysconf_plugin} {system_plugin} {thumthum_plugin} {upload_util} {user_info_plugin} {user_plugin} {videodownloader_plugin} {videoeditor_plugin} {videoplayer_plugin} {videoplayer_util} {vmc_savedata_plugin} {wboard_plugin} {webbrowser_plugin} {webrender_plugin} {xmb_ingame} {xmb_plugin_normal} {ycon_manual_plugin}}
 
         foreach rcoFile $rcoFiles {
             set devflashRcoFile [file join dev_flash vsh resource ${rcoFile}.rco]
-			
+
 			if {$options(--language-replace) == ""} {
 				} else {
 			    	if {[file isdirectory [file join ${langpackDir} replace]]} {
@@ -60,9 +60,9 @@ namespace eval ::language_pack {
 					    set mode "0"
                  	   ::modify_rco_file ${devflashRcoFile} ::language_pack::callback_rco ${replacelangpackRcoFile} ${mode} {empty}
 				 	   }
-					}	
+					}
                 }
-			
+
 			if {[file isdirectory [file join ${langpackDir} edit]]} {
 			set langs {{English} {French} {German} {Italian} {Finnish} {Dutch} {Danish} {Swedish} {Spanish} {Russian} {Portugese} {Norwegian} {Korean} {ChineseTrad} {ChineseSimpl} {Japanese}}
 				foreach lang $langs {
@@ -73,7 +73,7 @@ namespace eval ::language_pack {
 			    	}
                 }
             }
-			
+
 			if {[file exists [file join ${langpackDir} format.txt]]} {
             set formatlangpackRcoFile [file join ${langpackDir} format.txt]
                 if {[file exists $formatlangpackRcoFile]} {
@@ -82,7 +82,7 @@ namespace eval ::language_pack {
 			    }
             }
         }
-	}	
+	}
 
     proc callback_font { dst src } {
         if {[file exists ${src}]} {
@@ -103,31 +103,31 @@ namespace eval ::language_pack {
         if {${mode} == "0" } {
             set dst [file join ${path} $options(--language-replace).xml]
 		    }
-		
+
 		if {${mode} == "1" } {
 		    set dst [file join ${path} ${name}.xml]
 			}
-			
+
 		if {${mode} == "2" } {
 		set dst [file join ${::CUSTOM_PUP_DIR} "update_files" "dev_flash" "dev_flash" "vsh" "resource" ${name}.rco.xml]
 		}
-			
-        if {[file exists ${src}]} {	
-            if {[file exists ${dst}]} {			
-			if {${mode} != "2" } {			
+
+        if {[file exists ${src}]} {
+            if {[file exists ${dst}]} {
+			if {${mode} != "2" } {
                 log "Replacing ${dst}"
                 copy_file -force ${src} ${dst}
-				} else {				                  		
+				} else {
 				log "Patching format"
 				set re [open ${src} r]
                 set format [read $re]
 				set read [read [open ${dst} r]]
                 sed_in_place ${read} utf16 ${format}
-				close $re	
+				close $re
 				}
             } else {
                 die "${dst} does not exist"
-            }						
+            }
         } else {
             die "${src} does not exist"
         }

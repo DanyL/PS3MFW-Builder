@@ -7,11 +7,11 @@
 # This software is distributed under the terms of the GNU General Public
 # License ("GPL") version 3, as published by the Free Software Foundation.
 #
-    
+
 # Priority: 1400
 # Category: Video
 # Description: Clean unwanted icons from the XMB Video Category
-    
+
 # Option --clean-video-bddata-mgmt: Remove "BD Data Utility" icon from the XMB Video Category
 # Option --clean-video-dlna-scan: Remove "Search for Media Servers" icon from the XMB Video Category
 # Option --clean-video-dlna-device: Remove "Network Media Servers" icon from the XMB Video Category
@@ -36,15 +36,15 @@ namespace eval ::clean_video {
         --clean-video-netflix true
         --clean-video-welcome true
     }
-    
+
     proc main {} {
         set CATEGORY_VIDEO_XML [file join dev_flash vsh resource explore xmb category_video.xml]
         ::modify_devflash_file ${CATEGORY_VIDEO_XML} ::clean_video::callback
     }
-    
+
     proc callback { file } {
         log "Modifying XML file [file tail ${file}]"
-    
+
         set xml [::xml::LoadFile $file]
         if {$::clean_video::options(--clean-video-bddata-mgmt)} {
             set xml [::remove_node_from_xmb_xml $xml "seg_bddata_mgmt" "BD Data Utility"]
@@ -64,7 +64,7 @@ namespace eval ::clean_video {
         if {$::clean_video::options(--clean-video-welcome)} {
             set xml [::remove_node_from_xmb_xml $xml "seg_welcome" "PlayStation Store"]
         }
-    
+
         ::xml::SaveToFile $xml $file
     }
 }
