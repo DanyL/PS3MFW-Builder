@@ -8,7 +8,7 @@
 # License ("GPL") version 3, as published by the Free Software Foundation.
 #
 
-# MacOS X / Windows wrapper 
+# MacOS X / Windows wrapper
 #
 # Mac OSX: Remove Cocoa argument from arglist
 if {[string first "-psn" [lindex $argv 0]] == 0} { set argv [lrange $argv 1 end]}

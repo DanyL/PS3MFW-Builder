@@ -7,11 +7,11 @@
 # This software is distributed under the terms of the GNU General Public
 # License ("GPL") version 3, as published by the Free Software Foundation.
 #
-    
+
 # Priority: 1700
 # Category: Network
 # Description: Clean unwanted icons from the XMB Network Category
-    
+
 # Option --clean-network-browser: Remove "Internet Browser" icon from the XMB Network Category
 # Option --clean-network-folding-at-home: Remove "Life with PlayStation" icon from the XMB Network Category
 # Option --clean-network-kensaku: Remove "Internet Search" icon from the XMB Network Category
@@ -33,25 +33,25 @@ namespace eval ::clean_network {
         --clean-network-manual true
         --clean-network-premo true
     }
-    
+
     proc main {} {
         set CATEGORY_NETWORK_XML [file join dev_flash vsh resource explore xmb category_network.xml]
         ::modify_devflash_file ${CATEGORY_NETWORK_XML} ::clean_network::callback
     }
-    
+
     proc callback { file } {
         log "Modifying XML file [file tail ${file}]"
-    
+
 # hack to get around upstream category_network.xml errant />
-        set fd [open $file r] 
-        set data [read $fd] 
+        set fd [open $file r]
+        set data [read $fd]
         regsub {\s*/>(\s*/>\s*</Items>)} $data {\1} data
         close $fd
         set xml [::xml::Load $data]
-    
+
 # this should work but upstream category_network.xml has an errant />
 #    set xml [::xml::LoadFile $file]
-    
+
         if {$::clean_network::options(--clean-network-browser)} {
             set xml [::remove_node_from_xmb_xml $xml "seg_browser" "Internet Browser"]
         }
@@ -67,7 +67,7 @@ namespace eval ::clean_network {
         if {$::clean_network::options(--clean-network-premo)} {
             set xml [::remove_node_from_xmb_xml $xml "seg_premo" "Remote Play"]
         }
-    
+
         ::xml::SaveToFile $xml $file
     }
 }

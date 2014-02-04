@@ -343,7 +343,7 @@ proc modify_coreos_file { file callback args } {
     set pkg [file join ${::CUSTOM_UPDATE_DIR} CORE_OS_PACKAGE.pkg]
     set unpkgdir [file join ${::CUSTOM_UPDATE_DIR} CORE_OS_PACKAGE.unpkg]
     set cosunpkgdir [file join ${::CUSTOM_UPDATE_DIR} CORE_OS_PACKAGE]
-    
+
     ::unpkg_archive $pkg $unpkgdir
     ::cosunpkg_package [file join $unpkgdir content] $cosunpkgdir
 

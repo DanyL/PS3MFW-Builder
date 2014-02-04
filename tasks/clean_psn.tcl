@@ -7,11 +7,11 @@
 # This software is distributed under the terms of the GNU General Public
 # License ("GPL") version 3, as published by the Free Software Foundation.
 #
-    
+
 # Priority: 1800
 # Category: PlayStation Network
 # Description: Clean unwanted icons from the XMB PlayStation Network Category
-    
+
 # Option --clean-psn-commerce-new: Remove "What's New" icon from the XMB PlayStation Network Category
 # Option --clean-psn-home: Remove "PlayStation Home" icon from the XMB PlayStation Network Category
 # Option --clean-psn-regist: Remove "Sign In" icon from the XMB PlayStation Network Category
@@ -30,15 +30,15 @@ namespace eval ::clean_psn {
         --clean-psn-regist true
         --clean-psn-welcome true
     }
-    
+
     proc main {} {
         set CATEGORY_PSN_XML [file join dev_flash vsh resource explore xmb category_psn.xml]
         ::modify_devflash_file ${CATEGORY_PSN_XML} ::clean_psn::callback
     }
-    
+
     proc callback { file } {
         log "Modifying XML file [file tail ${file}]"
-    
+
         set xml [::xml::LoadFile $file]
         if {$::clean_psn::options(--clean-psn-commerce-new)} {
             set xml [::remove_node_from_xmb_xml $xml "seg_commerce_new" "What's New"]
@@ -52,7 +52,7 @@ namespace eval ::clean_psn {
         if {$::clean_psn::options(--clean-psn-welcome)} {
             set xml [::remove_node_from_xmb_xml $xml "seg_welcome" "PlayStation Store"]
         }
-    
+
         ::xml::SaveToFile $xml $file
     }
 }

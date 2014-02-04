@@ -67,19 +67,19 @@ namespace eval ::gui {
     variable padx 2
     variable pady 1
     variable theme  [set ::ttk::currentTheme]
-	
+
     proc create_gui {arguments selected_tasks} {
         variable tasks
-		
-		
+
+
 		set ::settings [file join $::PS3MFW_DIR Settings.xml]
 		set ::xmlang [::xml::LoadFile $::settings]
 		set ::language [::xml::GetData ${::xmlang} "Settings:language" 0]
 		if { ${::language} == "" } {
 			set ::language "English"
 		}
-		set re [open [file join $::PS3MFW_DIR language ${::language}.xml] r]	
-		# taken from Unicode and UTF-8 article (wiki.tcl.tk/515)	
+		set re [open [file join $::PS3MFW_DIR language ${::language}.xml] r]
+		# taken from Unicode and UTF-8 article (wiki.tcl.tk/515)
 		fconfigure $re -encoding binary
 		set InBuffer ""
 		set enc_xmllang ""
@@ -87,9 +87,9 @@ namespace eval ::gui {
 			append InBuffer [read $re 100]
 			append enc_xmllang [UTF8FullCodes InBuffer]
 		}
-		close $re		
+		close $re
 		set ::xmllang [::xml::Load $enc_xmllang]
-		
+
         wm title . "PS3MFW Builder v${::PS3MFW_VERSION}"
         create_menu
 
@@ -99,9 +99,9 @@ namespace eval ::gui {
             bind . <Control-Shift-C> "console show"
         }
 
-		bind . <Shift-R> {exec [info nameofexecutable] & 
+		bind . <Shift-R> {exec [info nameofexecutable] &
 		exit}
-		
+
         hijack_logs
 
         if {[llength $arguments] > 2} {
@@ -276,9 +276,9 @@ namespace eval ::gui {
         incr middle_y -[expr {int($h / 2)}]
         wm geometry .about ${w}x${h}+${middle_x}+${middle_y}
     }
-		
+
     proc add_settings { settings } {
-	
+
         set icon128 [image create photo -file [file join ${::PS3MFW_DIR} images ps3mfw-icon-128.gif]]
         pack [::ttk::label $settings.img -image $icon128 -anchor center] -expand false -fill both
 		set files [glob -directory [file join $::PS3MFW_DIR language] *]
@@ -295,7 +295,7 @@ namespace eval ::gui {
         set temp_label [::ttk::label $settings.temp.1 -text "Temp Files:"]
         set ::temp_entry [::ttk::entry $settings.temp.2 -textvariable ::temp_dir]
 		set ::temp_dir [file nativename ${::BUILD_DIR}]
-        set temp_button [::ttk::button $settings.temp.3 -text "[::xml::GetData ${::xmllang} "Lang:Browse" 0]" -command [list ::gui::browse_directory ${::temp_entry} "Select Temp directory:"]]	
+        set temp_button [::ttk::button $settings.temp.3 -text "[::xml::GetData ${::xmllang} "Lang:Browse" 0]" -command [list ::gui::browse_directory ${::temp_entry} "Select Temp directory:"]]
 		pack $temp_label $::temp_entry $temp_button -side left -expand true
         set ps3_keys_label [::ttk::label $settings.ps3_keys.1 -text "PS3_KEYS:"]
         set ::ps3_keys_entry [::ttk::entry $settings.ps3_keys.2 -textvariable ::ps3_keys_dir]
@@ -304,11 +304,11 @@ namespace eval ::gui {
 		pack $ps3_keys_label $::ps3_keys_entry $ps3_keys_button -side left -expand true
 		set ssettings [::ttk::button $settings.7 -text "[::xml::GetData ${::xmllang} "Lang:Save_settings" 0]" -command ::gui::save_settings]
 		set csettings [::ttk::button $settings.8 -text "[::xml::GetData ${::xmllang} "Lang:Default_settings" 0]" -command ::gui::default_settings]
-		pack $ssettings $csettings -side left -expand true -fill none	
+		pack $ssettings $csettings -side left -expand true -fill none
     }
 
     proc settings { } {
-	
+
         destroy .settings
         toplevel .settings
         wm title .settings "[::xml::GetData ${::xmllang} "Lang:PS3MFW_Builder_Settings" 0]"
@@ -326,7 +326,7 @@ namespace eval ::gui {
         incr middle_y -[expr {int($h / 2)}]
         wm geometry .settings ${w}x${h}+${middle_x}+${middle_y}
     }
-	
+
     proc populate_themes {themes} {
 
         array set THEMES {
@@ -447,7 +447,7 @@ namespace eval ::gui {
 				set button [::ttk::button $w.$name.button -text "[::xml::GetData ${::xmllang} "Lang:Browse" 0]" \
 					-command [list ::gui::browse_directory $entry $title]]
 				pack $label $entry $button -side left -expand true -fill x -anchor nw -padx $::gui::padx -pady $::gui::pady
-			}	
+			}
             textarea {
                 set widget [::ttk::frame $w.$name]
                 set label [::ttk::label $w.$name.label -text "$description :"]
@@ -457,7 +457,7 @@ namespace eval ::gui {
                       -xscrollcommand [list ::gui::set_scroll $frame.sx]];
                 set sy [::ttk::scrollbar $frame.sy -orient vertical -command [list $text yview]]
                 set sx [::ttk::scrollbar $frame.sx -orient horizontal -command [list $text xview]]
-    
+
                 grid $text -row 0 -column 0 -sticky nsew -padx $::gui::padx -pady $::gui::pady
                 grid $sy -row 0 -column 1 -sticky ns -padx $::gui::padx -pady $::gui::pady
                 grid $sx -row 1 -column 0 -sticky ew -padx $::gui::padx -pady $::gui::pady
@@ -482,7 +482,7 @@ namespace eval ::gui {
                           -xscrollcommand [list ::gui::set_scroll $frame.sx]];
                     set sy [::ttk::scrollbar $frame.sy -orient vertical -command [list $text yview]]
                     set sx [::ttk::scrollbar $frame.sx -orient horizontal -command [list $text xview]]
-    
+
                     grid $text -row 0 -column 0 -sticky nsew -padx $::gui::padx -pady $::gui::pady
                     grid $sy -row 0 -column 1 -sticky ns -padx $::gui::padx -pady $::gui::pady
                     grid $sx -row 1 -column 0 -sticky ew -padx $::gui::padx -pady $::gui::pady
@@ -612,7 +612,7 @@ namespace eval ::gui {
             $path insert 0 $file
         }
     }
-	
+
     proc browse_directory { path title } {
         set file [tk_chooseDirectory -parent $path -title $title]
         if {$file != ""} {
@@ -747,9 +747,9 @@ namespace eval ::gui {
         set Buffer [string range $Buffer $Pos end]
         return $Res
  }
-	
+
 	proc load_settings { } {
-	
+
         set ::IN_FILE [::xml::GetData ${::xmlang} "Settings:IN_FILE" 0]
         set ::OUT_FILE [::xml::GetData ${::xmlang} "Settings:OUT_FILE" 0]
 
@@ -761,9 +761,9 @@ namespace eval ::gui {
                 lappend selected_tasks $task
             }
         }
-		
+
 		set data [::xml::GetData ${::xmlang} "Settings:tasks" 0]
-		
+
         foreach task $selected_tasks {
 			set ::gui::tasks($task) false
 		}
@@ -771,24 +771,24 @@ namespace eval ::gui {
         foreach task $data {
 			set ::gui::tasks($task) true
 		}
-		
-		if { [::xml::GetData ${::xmlang} "Settings:Theme" 0] != "" } {	
+
+		if { [::xml::GetData ${::xmlang} "Settings:Theme" 0] != "" } {
 			::ttk::setTheme [::xml::GetData ${::xmlang} "Settings:Theme" 0]
 			variable theme  [set ::ttk::currentTheme]
 		}
 	}
-	
+
 	proc save_settings { } {
-	
+
 		set fs $::settings
 		set ::xmlang [::xml::LoadFile $fs]
-	
+
 		sed_in_place $fs "<IN_FILE>[::xml::GetData ${::xmlang} "Settings:IN_FILE" 0]</IN_FILE>" "<IN_FILE>${::IN_FILE}</IN_FILE>"
 		sed_in_place $fs "<OUT_FILE>[::xml::GetData ${::xmlang} "Settings:OUT_FILE" 0]</OUT_FILE>" "<OUT_FILE>${::OUT_FILE}</OUT_FILE>"
-				
+
 		variable theme
 		sed_in_place $fs "<Theme>[::xml::GetData ${::xmlang} "Settings:Theme" 0]</Theme>" "<Theme>${theme}</Theme>"
-				
+
 		variable tasks
         set selected_tasks [list]
         foreach task [array names tasks] {
@@ -804,25 +804,25 @@ namespace eval ::gui {
 			}
 
 		sed_in_place $fs "<tasks>[::xml::GetData ${::xmlang} "Settings:tasks" 0]</tasks>" "<tasks>${taskslist}</tasks>"
-		
+
 		if {${::selected_lang} != [::xml::GetData ${::xmlang} "Settings:language" 0] & ${::selected_lang} != "" | [string trim ${::ps3_keys_dir}] != [::xml::GetData ${::xmlang} "Settings:PS3_KEYS" 0] | ${::temp_dir} != [file join /tmp PS3MFW] & ${::temp_dir} != [::xml::GetData ${::xmlang} "Settings:BUILD_DIR" 0]} {
-			sed_in_place $fs "<language>[::xml::GetData ${::xmlang} "Settings:language" 0]</language>" "<language>[string trim ${::selected_lang}]</language>"	
+			sed_in_place $fs "<language>[::xml::GetData ${::xmlang} "Settings:language" 0]</language>" "<language>[string trim ${::selected_lang}]</language>"
 
 			if {[file exists ${::temp_dir}]} {
 				sed_in_place $fs "<BUILD_DIR>[::xml::GetData ${::xmlang} "Settings:BUILD_DIR" 0]</BUILD_DIR>" "<BUILD_DIR>${::temp_dir}</BUILD_DIR>"
 			} else {
 				sed_in_place $fs "<BUILD_DIR>[::xml::GetData ${::xmlang} "Settings:BUILD_DIR" 0]</BUILD_DIR>" "<BUILD_DIR></BUILD_DIR>"
 			}
-				
+
 			if {[file exists ${::ps3_keys_dir}]} {
 				sed_in_place $fs "<PS3_KEYS>[::xml::GetData ${::xmlang} "Settings:PS3_KEYS" 0]</PS3_KEYS>" "<PS3_KEYS>${::ps3_keys_dir}</PS3_KEYS>"
 			} else {
 				sed_in_place $fs "<PS3_KEYS>[::xml::GetData ${::xmlang} "Settings:PS3_KEYS" 0]</PS3_KEYS>" "<PS3_KEYS></PS3_KEYS>"
 			}
-			
+
 			exec [info nameofexecutable] &
 			exit
-		}	
+		}
 	}
 
 	proc default_settings { } {
@@ -830,7 +830,7 @@ namespace eval ::gui {
 		set ::ps3_keys_dir ""
 	    set ::IN_FILE ""
         set ::OUT_FILE ""
-			
+
 		variable tasks
         set selected_tasks [list]
         foreach task [array names tasks] {
@@ -838,8 +838,8 @@ namespace eval ::gui {
             if {$tasks($task)} {
                 lappend selected_tasks $task
             }
-        }	
-			
+        }
+
         foreach task $selected_tasks {
 			set ::gui::tasks($task) false
 		}
@@ -847,7 +847,7 @@ namespace eval ::gui {
         foreach task [list add_license_msg change_version patch_category_game] {
 			set ::gui::tasks($task) true
 		}
-		
+
 		set ::selected_lang "English"
 
 		if { $::tcl_platform(os) == "Linux" } {
@@ -858,10 +858,10 @@ namespace eval ::gui {
 			::ttk::setTheme aqua
 		}
 		variable theme  [set ::ttk::currentTheme]
-		
+
 		::gui::save_settings
-	}	
-	
+	}
+
     proc print_log {msg {tag {}}} {
         if {[winfo exists .middle.log]} {
             .middle.log configure -state normal

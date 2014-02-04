@@ -7,7 +7,7 @@
 # This software is distributed under the terms of the GNU General Public
 # License ("GPL") version 3, as published by the Free Software Foundation.
 #
-    
+
 # Priority: 2300
 # Description: Patch firmware for installation shop/promo unit
 
@@ -17,8 +17,8 @@
 
 # Type --patch-promo-flags: boolean
 # Type --patch-update-flags: boolean
-# Type --patch-version: string 
-    
+# Type --patch-version: string
+
 namespace eval ::patch_shop {
 
     array set ::patch_shop::options {

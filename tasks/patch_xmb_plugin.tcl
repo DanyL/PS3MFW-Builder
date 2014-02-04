@@ -7,7 +7,7 @@
 # This software is distributed under the terms of the GNU General Public
 # License ("GPL") version 3, as published by the Free Software Foundation.
 #
-    
+
 # Priority: 2500
 # Description: Remove unwanted icons from the XMB
 
@@ -53,7 +53,7 @@ namespace eval ::patch_xmb_plugin {
         --remove-psn false
         --remove-friends false
     }
-    
+
     proc main {} {
         if {$::patch_xmb_plugin::options(--patch-xmb-plugin)} {
           set XMB_SPRX [file join dev_flash vsh module xmb_plugin.sprx]
@@ -64,7 +64,7 @@ namespace eval ::patch_xmb_plugin {
 	  ::modify_devflash_file ${XMB_SPRX} ::patch_xmb_plugin::patch_self
         }
     }
-    
+
     proc patch_self {self} {
         log "Patching [file tail $self]"
         ::modify_self_file $self ::patch_xmb_plugin::patch_elf

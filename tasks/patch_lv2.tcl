@@ -7,10 +7,10 @@
 # This software is distributed under the terms of the GNU General Public
 # License ("GPL") version 3, as published by the Free Software Foundation.
 #
-    
+
 # Priority: 400
 # Description: Patch LV2 kernel
-    
+
 # Option --patch-lv2-peek-poke: Patch to add Peek&Poke system calls to LV2
 
 # Type --patch-lv2-peek-poke: boolean

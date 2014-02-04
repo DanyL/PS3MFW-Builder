@@ -12,7 +12,7 @@
 # Description: Add "Homebrew" category to the XMB
 
 # Option --homebrew-cat: Category to replace
-    
+
 # Type --homebrew-cat: combobox {{Users} {Photo} {Music} {Video} {TV} {Game} {Network} {PlayStation® Network} {Friends}}
 
 
@@ -27,11 +27,11 @@ namespace eval ::homebrew_category {
 		set CATEGORY_GAME_TOOL2_XML [file join dev_flash vsh resource explore xmb category_game_tool2.xml]
 		set EXPLORE_PLUGIN_FULL_RCO [file join dev_flash vsh resource explore_plugin_full.rco]
 		set XMB_INGAME_RCO [file join dev_flash vsh resource xmb_ingame.rco]
-		
+
 		if {$::homebrew_category::options(--homebrew-cat) == "Users"} {
 		set CATEGORY_XML [file join dev_flash vsh resource explore xmb category_user.xml]
 		}
-		
+
 		if {$::homebrew_category::options(--homebrew-cat) == "Photo"} {
 		set CATEGORY_XML [file join dev_flash vsh resource explore xmb category_photo.xml]
 		}
@@ -39,40 +39,40 @@ namespace eval ::homebrew_category {
 		if {$::homebrew_category::options(--homebrew-cat) == "Music"} {
 		set CATEGORY_XML [file join dev_flash vsh resource explore xmb category_music.xml]
 		}
-		
+
 		if {$::homebrew_category::options(--homebrew-cat) == "Video"} {
 		set CATEGORY_XML [file join dev_flash vsh resource explore xmb category_video.xml]
 		}
-		
+
 		if {$::homebrew_category::options(--homebrew-cat) == "TV"} {
 		set CATEGORY_XML [file join dev_flash vsh resource explore xmb category_tv.xml]
 		set XMB_PLUGIN [file join dev_flash vsh module xmb_plugin.sprx]
 		modify_devflash_file $XMB_PLUGIN ::homebrew_category::patch_self
 		}
-		
+
 		if {$::homebrew_category::options(--homebrew-cat) == "Game"} {
 		set CATEGORY_XML [file join dev_flash vsh resource explore xmb category_game.xml]
 		}
-		
+
 		if {$::homebrew_category::options(--homebrew-cat) == "Network"} {
 		set CATEGORY_XML [file join dev_flash vsh resource explore xmb category_network.xml]
 		}
-		
+
 		if {$::homebrew_category::options(--homebrew-cat) == "PlayStation® Network"} {
 		set CATEGORY_XML [file join dev_flash vsh resource explore xmb category_psn.xml]
 		}
-		
+
 		if {$::homebrew_category::options(--homebrew-cat) == "Friends"} {
 		set CATEGORY_XML [file join dev_flash vsh resource explore xmb category_friend.xml]
 		}
-		
+
 		modify_devflash_file $CATEGORY_TV_XML ::homebrew_category::find_nodes
         modify_devflash_file $CATEGORY_GAME_TOOL2_XML ::homebrew_category::find_nodes_2
         modify_devflash_file $CATEGORY_XML ::homebrew_category::inject_nodes
 		modify_rco_file $EXPLORE_PLUGIN_FULL_RCO ::homebrew_category::callback_homebrew
 		modify_rco_file $XMB_INGAME_RCO ::homebrew_category::callback_homebrew
 	}
-	
+
     proc patch_self {self} {
         log "Patching [file tail $self]"
         ::modify_self_file $self ::homebrew_category::patch_elf
@@ -87,18 +87,18 @@ namespace eval ::homebrew_category {
             catch_die {::patch_elf $elf $search 0 $replace} \
                 "Unable to patch self [file tail $elf]"
     }
-	
+
 		proc find_nodes { file } {
         log "Parsing XML: [file tail $file]"
         set xml [::xml::LoadFile $file]
 
             set ::XMBML [::xml::GetNodeByAttribute $xml "XMBML" version "1.0"]
-    
+
             if {$::XMBML == ""} {
                 die "Could not parse $file"
             }
     }
-	
+
 	proc find_nodes_2 { file } {
         log "Parsing XML: [file tail $file]"
         set xml [::xml::LoadFile $file]
@@ -106,30 +106,30 @@ namespace eval ::homebrew_category {
             set ::query_package_files [::xml::GetNodeByAttribute $xml "XMBML:View:Items:Query" key "seg_package_files"]
             set ::view_package_files [::xml::GetNodeByAttribute $xml "XMBML:View" id "seg_package_files"]
             set ::view_packages [::xml::GetNodeByAttribute $xml "XMBML:View" id "seg_packages"]
-    
+
             if {$::query_package_files == "" || $::view_package_files == "" || $::view_packages == "" } {
                 die "Could not parse $file"
             }
 
             set ::query_gamedebug [::xml::GetNodeByAttribute $xml "XMBML:View:Items:Query" key "seg_gamedebug"]
             set ::view_gamedebug [::xml::GetNodeByAttribute $xml "XMBML:View" id "seg_gamedebug"]
-    
+
             if {$::query_gamedebug == "" || $::view_gamedebug== "" } {
                 die "Could not parse $file"
             }
     }
-    
+
     proc inject_nodes { file } {
         log "Modifying XML: [file tail $file]"
         set xml [::xml::LoadFile $file]
-		
+
 		    set xml [::xml::ReplaceNode $xml [::xml::GetNodeIndicesByAttribute $xml "XMBML" version "1.0"] $::XMBML]
             set xml [::xml::InsertNode $xml [::xml::GetNodeIndicesByAttribute $xml "XMBML:View:Items:Query" key "seg_gameexit"] $::query_package_files]
             set xml [::xml::InsertNode $xml {2 end 0} $::view_package_files]
             set xml [::xml::InsertNode $xml {2 end 0} $::view_packages]
 			set xml [::xml::InsertNode $xml [::xml::GetNodeIndicesByAttribute $xml "XMBML:View:Items:Query" key "seg_gameexit"] $::query_gamedebug]
             set xml [::xml::InsertNode $xml {2 end 0} $::view_gamedebug]
-    
+
             unset ::query_package_files
             unset ::view_package_files
             unset ::view_packages
@@ -137,9 +137,9 @@ namespace eval ::homebrew_category {
             unset ::view_gamedebug
         ::xml::SaveToFile $xml $file
     }
-	
-	    proc callback_homebrew {path args} {		
+
+	    proc callback_homebrew {path args} {
         log "Patching English.xml into [file tail $path]"
-        sed_in_place [file join $path English.xml] $::homebrew_category::options(--homebrew-cat) Homebrew	
+        sed_in_place [file join $path English.xml] $::homebrew_category::options(--homebrew-cat) Homebrew
 }
 }

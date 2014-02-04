@@ -7,7 +7,7 @@
 # This software is distributed under the terms of the GNU General Public
 # License ("GPL") version 3, as published by the Free Software Foundation.
 #
- 
+
 # Priority: 2900
 # Description: Change a specific file in devflash manually
 
